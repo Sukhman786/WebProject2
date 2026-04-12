@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Varela+Round&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="book.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <section class="contactji" id="contactji">
+        <div class="contact-container">
+            <form id="bookingForm" class="form-contact" action="booking.php" method="post">
+                <h1 class="h1-contact"><span>Courier </span>Booking</h1>
+
+                <h3 class="form-section-title">Sender Details</h3>
+                <input name="s_name" class="input-form" type="text" placeholder="Sender's Name" required>
+                <input name="s_mobile" class="input-form" type="tel" pattern="[0-9]{10}" placeholder="Sender's Mobile (10 digits)" required>
+                <input name="s_address" class="input-form" type="text" placeholder="Sender's Address" required>
+
+                <input name="r_name" class="input-form" type="text" placeholder="Receiver's Name" required>
+                <input name="r_mobile" class="input-form" type="tel" pattern="[0-9]{10}" placeholder="Receiver's Mobile (10 digits)" required>
+                <input name="r_address" class="input-form" type="text" placeholder="Receiver's Address" required>
+
+                <h3 class="form-section-title">Parcel Details</h3>
+                <select name="p_type" class="input-form" required>
+                    <option value="" disabled selected>Select Parcel Type</option>
+                    <option value="D">Documents</option>
+                    <option value="E">Electronics</option>
+                    <option value="C">Clothes</option>
+                    <option value="F">Fragile</option>
+                </select>
+                
+                <input name="weight" class="input-form" type="number" step="0.1" placeholder="Weight (grams)" required>
+
+                <select name="d_type" class="input-form" required>
+                    <option value="" disabled selected>Select Delivery Type</option>
+                    <option value="N">Normal</option>
+                    <option value="E">Express</option>
+                    <option value="S">Same-day</option>
+                </select>
+
+                <select name="p_mode" class="input-form" required>
+                    <option value="" disabled selected>Payment Mode</option>
+                    <option value="C">COD</option>
+                    <option value="O">Online</option>
+                    <option value="P">Prepaid</option>
+                </select>
+
+                <div class="btnsji" style="display: flex; gap: 30px;">
+                    <button id="submitBtn" class="input-btn" type="button">Book Now</button>
+                    <a href="index.html" id="btnnji" class="input-btn">Back to Home</a>
+                </div>
+
+
+                <div id="response-text" class="hidden-message">
+                    <div class="message-content">
+                        Booking Successful! <br> 
+                        <span id="spanHidmsg">Your Tracking ID is: </span><span id="trackID" class="hidMsgSpan"></span>
+                    </div>
+                    <div class="button-group">
+                        <button type="button" class="btn-primary" onclick="location.reload()">Book Another</button>
+                        <button type="button" class="btn-secondary" onclick="window.location.href='index.html'">Back to Home</button>
+                    </div>
+                </div>   
+            </form>
+        </div>
+    </section>
+    <script src="script.js"></script>
+</body>
+</html>

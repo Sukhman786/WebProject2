@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Charges Calculator</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Varela+Round&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body style="background: var(--bg-color); margin:0; padding: 0; min-height: 100vh; min-width: 100%; display: flex; justify-content: center; align-items: center;">
+    <div class="track-container" style="background: black; border: 3px solid var(--main-color); padding: 30px;">
+        <h2 style="color: var(--main-color); margin-top: 1rem; margin-bottom: 3.5rem;">Charges <span>Calculator</span></h2>
+        
+        <div class="num-data" style="margin-top: 2rem;">
+            <form style="width: 100%; display: flex; flex-direction: column; align-items: center; justify-items: center;">
+                <input type="number" id="weight" placeholder="Weight in Grams" class="input-form" style="width: 400px; margin-bottom: 30px; padding: 0.7rem 1.3rem; border-radius: 5px; border: none; font-size: 1.2rem;">
+                <select id="parcelType" class="input-form" style="width: 400px; background: #1a1a1a; color: white; margin-bottom: 30px; padding: 0.7rem 1.3rem; border: 1px solid var(--main-color); border-radius: 5px; font-size: 1.2rem;">
+                    <option value="standard">Standard Document</option>
+                    <option value="fragile">Fragile Item (+Rs. 50)</option>
+                    <option value="electronics">Electronics (+Rs. 100)</option>
+                </select>
+                <select id="deliveryType" class="input-form" style="width: 400px; background: #1a1a1a; color: white; margin-bottom: 30px; padding: 0.7rem 1.3rem; border: 1px solid var(--main-color); border-radius: 5px; font-size: 1.2rem;">
+                    <option value="1">Normal (1x)</option>
+                    <option value="2">Express (2x)</option>
+                    <option value="3">Same-Day (3x)</option>
+                </select>
+
+                <div class="btns" style="display: flex; gap: 30px;">
+                    <button type="button" onclick="calculateTotal()" class="input-btn" style="width: 150px; height: 30px; background: var(--main-color); color: black; font-weight: 700; margin-top: 10px;">Analyze Charges</button>
+                    <button type="button" onclick="window.location.href='index.html'" class="input-btn" style="width: 150px; height: 30px; background: black; color: var(--main-color); font-weight: 700; margin-top: 10px; border: 2px solid var(--main-color);">Back to Home</button>  
+                </div>
+            </form>
+        </div>
+
+        <p class="msg" style="color: var(--main-color); font-size: 2rem;">
+                Result: <span id="totalDisplay" style="color: white;"> Rs. 0.00</span>
+        </p>
+    </div>
+
+    <script>
+        function calculateTotal() {
+            const weight = parseFloat(document.getElementById('weight').value) || 0;
+            const parcelType = document.getElementById('parcelType').value;
+            const multiplier = parseFloat(document.getElementById('deliveryType').value);
+            
+            let basePrice = weight * 0.5;
+
+            if (parcelType === "fragile") basePrice += 50;
+            if (parcelType === "electronics") basePrice += 100;
+
+            const finalTotal = basePrice * multiplier;
+
+            document.getElementById('totalDisplay').innerText = "Rs. " + finalTotal.toFixed(2);
+        }
+    </script>
+
+</body>
+</html>
