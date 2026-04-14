@@ -13,52 +13,49 @@ if (!$conn) {
 
 // 2. Get data from POST
 $s_name = $_POST['s_name'] ?? '';
-$s_mob  = $_POST['s_mobile'] ?? '';
-$s_addr = $_POST['s_address'] ?? '';
+$s_mobile  = $_POST['s_mobile'] ?? '';
+$s_address = $_POST['s_address'] ?? '';
 $r_name = $_POST['r_name'] ?? '';
-$r_mob  = $_POST['r_mobile'] ?? '';
-$r_addr = $_POST['r_address'] ?? '';
+$r_mobile  = $_POST['r_mobile'] ?? '';
+$r_address = $_POST['r_address'] ?? '';
 $p_type = $_POST['p_type'] ?? '';
 $weight = $_POST['weight'] ?? '';
 $d_type = $_POST['d_type'] ?? '';
 $p_mode = $_POST['p_mode'] ?? '';
-// ... collect receiver details and types similarly ...
 
-$random_num = str_pad(rand(1, 999), 3, '0', STR_PAD_LEFT); 
-$custom_id = "S" . $random_num; // Result example: S001, S085, S999
+$trackingId = "";
 
 // 3. Prepare SQL with auto-generating ID
 $sql = "INSERT INTO courier_bookings (
-            booking_id, sender_name, sender_mobile, sender_address, 
-            receiver_name, receiver_mobile, receiver_address,
-            parcel_type, weight_grams, delivery_type, payment_mode
+            SENDER_NAME, SENDER_MOBILE, SENDER_ADDRESS, 
+            RECEIVER_NAME, RECEIVER_MOBILE, RECEIVER_ADDRESS, 
+            PARCEL_TYPE, WEIGHT_GRAMS, DELIVERY_TYPE, PAYMENT_MODE
         ) VALUES (
-            :id, :sn, :sm, :sa, :rn, :rm, :ra, :pt, :wg, :dt, :pm
-        )";
+            :sn, :sm, :sa, :rn, :rm, :ra, :pt, :wg, :dt, :pm
+        ) RETURNING TRACKING_ID INTO :generated_id";
 
 $stmt = oci_parse($conn, $sql);
 
 // 4. Bind variables (prevents SQL injection)
 oci_bind_by_name($stmt, ':sn', $s_name);
-oci_bind_by_name($stmt, ':sm', $s_mob);
-oci_bind_by_name($stmt, ':sa', $s_addr);
+oci_bind_by_name($stmt, ':sm', $s_mobile);
+oci_bind_by_name($stmt, ':sa', $s_address);
 oci_bind_by_name($stmt, ':rn', $r_name);
-oci_bind_by_name($stmt, ':rm', $r_mob);
-oci_bind_by_name($stmt, ':ra', $r_addr);
+oci_bind_by_name($stmt, ':rm', $r_mobile);
+oci_bind_by_name($stmt, ':ra', $r_address);
 oci_bind_by_name($stmt, ':pt', $p_type);
 oci_bind_by_name($stmt, ':wg', $weight);
 oci_bind_by_name($stmt, ':dt', $d_type);
 oci_bind_by_name($stmt, ':pm', $p_mode);
-oci_bind_by_name($stmt, ':id', $custom_id, 32);
+oci_bind_by_name($stmt, ':generated_id', $trackingId, 20, SQLT_CHR);
 
 // 5. Execute
-$result = oci_execute($stmt);
+if (oci_execute($stmt)) {
+    echo $trackingId; // This will return S001, S002, etc.
 
-if ($result) {
-    echo $custom_id;
 } else {
     $e = oci_error($stmt);
-    echo "Error: " . $e['message'];
+    echo "DB Error: " . $e['message'];
 }
 
 oci_free_statement($stmt);
