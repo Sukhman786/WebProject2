@@ -6,23 +6,20 @@ document.getElementById('submitBtn').addEventListener('click', function() {
         return;
     }
 
-    const formData = new FormData(form); // Gathers all input data automatically
+    const formData = new FormData(form);
 
-    // Send data to PHP using Fetch API
     fetch('booking.php', {
         method: 'POST',
         body: formData
     })
     .then(response => response.text())
     .then(data => {
+        // 'data' now contains the ID (e.g., S001) sent back by Oracle/PHP
         document.getElementById('trackID').innerText = data;
     
-    // 1. Show the response container as a FLEX box for centering
         const responseArea = document.getElementById('response-text');
         responseArea.style.display = 'flex';
         
-        // 2. Hide ONLY the form elements (not the new success buttons)
-        // We target elements that DON'T have the 'nav-btn' class
         document.querySelectorAll('.input-form, .form-section-title, .h1-contact, .input-btn:not(.nav-btn)').forEach(el => {
             el.style.display = 'none';
         });

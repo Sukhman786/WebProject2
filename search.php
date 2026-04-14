@@ -1,38 +1,47 @@
 <?php
+// 1. Connection Details
 $conn = oci_connect('SYSTEM', '01042006', '127.0.0.1/freepdb1');
 
-// Check if the delete request was sent
+if (!$conn) {
+    $e = oci_error();
+    die("Connection failed: " . $e['message']);
+}
+
+// 2. Updated Delete Request Logic
 if (isset($_POST['delete_id'])) {
     $del_id = $_POST['delete_id'];
-    $del_sql = "DELETE FROM courier_bookings WHERE booking_id = :bid";
+    // Use RAW_ID for the actual deletion query
+    $del_sql = "DELETE FROM courier_bookings WHERE RAW_ID = :bid";
     $del_stmt = oci_parse($conn, $del_sql);
     oci_bind_by_name($del_stmt, ':bid', $del_id);
     
     if (oci_execute($del_stmt)) {
-        echo "<script>alert('Record $del_id has been permanently deleted from the Database.'); window.location.href='search.php';</script>";
+        echo "<script>alert('Booking has been permanently deleted from the Database.'); window.location.href='search.php';</script>";
     } else {
         $e = oci_error($del_stmt);
         echo "<script>alert('Error deleting record: " . $e['message'] . "');</script>";
     }
 }
 
-$booking_id = $_GET['booking_id'] ?? '';
+$search_id = $_GET['booking_id'] ?? '';
 $row = null;
 
-if ($booking_id) {
-    // 1. Prepare Query
-    $sql = "SELECT * FROM courier_bookings WHERE booking_id = :bid";
+// 3. Updated Search Logic
+if ($search_id) {
+    // Search using the Virtual Column TRACKING_ID (the S001 format)
+    $sql = "SELECT RAW_ID, TRACKING_ID, SENDER_NAME, SENDER_MOBILE, SENDER_ADDRESS, 
+               RECEIVER_NAME, RECEIVER_MOBILE, RECEIVER_ADDRESS, 
+               PARCEL_TYPE, WEIGHT_GRAMS, DELIVERY_TYPE, PAYMENT_MODE,
+               TO_CHAR(BOOKING_DATE, 'DD-MON-YYYY HH:MI AM') as BOOKING_DATE 
+        FROM courier_bookings 
+        ORDER BY RAW_ID DESC";
+        
     $stmt = oci_parse($conn, $sql);
-    oci_bind_by_name($stmt, ':bid', $booking_id);
+    oci_bind_by_name($stmt, ':bid', $search_id);
     oci_execute($stmt);
     
-    // 2. Fetch the data
     $row = oci_fetch_array($stmt, OCI_ASSOC);
 }
-
-// if (!$row) {
-//     die("<h1 style='color:white; text-align:center;'>Booking Not Found! <a href='search.php'>Try Again</a></h1>");
-// }
 ?>
 
 <!DOCTYPE html>
@@ -53,14 +62,15 @@ if ($booking_id) {
     
                 <form action="search.php" method="GET" style="display: flex; align-items: center; margin: 0;">
                     <input type="text" name="booking_id" placeholder="Enter ID (e.g. S001)" 
-                        class="input-form" style="margin: 0; width: 250px;" required>
+                        class="input-form" style="margin: 0; width: 250px;" 
+                        value="<?php echo htmlspecialchars($search_id); ?>" required>
                     
                     <button type="submit" class="input-btn" style="margin-left: 10px;">SEARCH</button>
                 </form>
 
                 <?php if ($row): ?>
                 <form action="search.php" method="POST" onsubmit="return confirm('Do you want to Delete this record?')" style="display: flex; align-items: center; margin: 0;">
-                    <input type="hidden" name="delete_id" value="<?php echo $row['BOOKING_ID']; ?>">
+                    <input type="hidden" name="delete_id" value="<?php echo $row['RAW_ID']; ?>">
                     <button type="submit" class="input-btn delete-btn">DELETE</button>
                 </form>
                 <?php endif; ?>
@@ -70,7 +80,7 @@ if ($booking_id) {
             <?php if ($row): ?>
             <div class="receipt-card">
                 <div class="receipt-header">
-                    <p><strong>Booking ID:</strong> <span class="highlight"><?php echo $row['BOOKING_ID']; ?></span></p>
+                    <p><strong>Tracking ID:</strong> <span class="highlight"><?php echo $row['TRACKING_ID']; ?></span></p>
                     <p><strong>Date:</strong> <span class="highlight"><?php echo $row['BOOKING_DATE']; ?></span></p>
                 </div>
 
@@ -102,8 +112,8 @@ if ($booking_id) {
                 </div>
             </div>
 
-            <?php elseif ($booking_id): ?>
-                <h2 style="text-align:center; color:white; margin-bottom: 20px;">ID: <?php echo htmlspecialchars($booking_id); ?> Not Found!</h2>
+            <?php elseif ($search_id): ?>
+                <h2 style="text-align:center; color:white; margin-bottom: 20px;">ID: <?php echo htmlspecialchars($search_id); ?> Not Found!</h2>
             <?php endif; ?>
 
             <div class="action-btns">
@@ -111,13 +121,5 @@ if ($booking_id) {
             </div>
         </div>
     </section>
-
-    //delete btn logic
-    <script>
-    function confirmDelete(id) {
-        // This is the browser's built-in confirmation popup
-        return confirm("CAUTION: Are you sure you want to delete Booking ID " + id + " from the database? This action cannot be undone.");
-    }
-</script>
 </body>
 </html>
