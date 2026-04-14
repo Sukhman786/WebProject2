@@ -526,6 +526,7 @@ textarea.input-form{
 }
 
 .contactji .contact-container .form-contact .input-btn{
+    cursor: pointer;
     background-color: var(--main-color);
     font-size: 1.2rem;
     font-weight: 700;

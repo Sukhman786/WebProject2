@@ -34,7 +34,7 @@ if ($search_id) {
                PARCEL_TYPE, WEIGHT_GRAMS, DELIVERY_TYPE, PAYMENT_MODE,
                TO_CHAR(BOOKING_DATE, 'DD-MON-YYYY HH:MI AM') as BOOKING_DATE 
         FROM courier_bookings 
-        ORDER BY RAW_ID DESC";
+        WHERE TRACKING_ID = :bid";
         
     $stmt = oci_parse($conn, $sql);
     oci_bind_by_name($stmt, ':bid', $search_id);
