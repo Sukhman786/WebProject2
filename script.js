@@ -1,3 +1,26 @@
+// FEATURE 3: CALCULATOR (Moved outside so HTML can access it globally)
+function calculateTotal() {
+    const weightInput = document.getElementById('weight');
+    const parcelTypeInput = document.getElementById('parcelType');
+    const deliveryTypeInput = document.getElementById('deliveryType');
+    const display = document.getElementById('totalDisplay');
+
+    // Basic safety check
+    if (!weightInput || !parcelTypeInput || !deliveryTypeInput || !display) return;
+
+    const weight = parseFloat(weightInput.value) || 0;
+    const multiplier = parseFloat(deliveryTypeInput.value) || 1;
+    let basePrice = weight * 0.5;
+
+    if (parcelTypeInput.value === "fragile") basePrice += 50;
+    if (parcelTypeInput.value === "electronics") basePrice += 100;
+
+    display.innerText = (basePrice * multiplier).toFixed(2);
+}
+
+
+
+
 document.addEventListener('DOMContentLoaded', () => {
     
     // --- FEATURE 1: BOOKING FORM ---
@@ -25,7 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const responseArea = document.getElementById('response-text');
                 if(responseArea) responseArea.style.display = 'flex';
                 
-                // Hide booking related elements
                 document.querySelectorAll('.input-form, .form-section-title, .h1-contact, .input-btn:not(.nav-btn)').forEach(el => {
                     el.style.display = 'none';
                 });
@@ -34,54 +56,27 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- FEATURE 2: CONTACT FORM (The one you are fixing) ---
-    const contactBtn = document.getElementById('contact-btnji');
-    const nameInput = document.getElementById('contact-nameji');
-    const responseText = document.getElementById('response-text');
+    // --- FEATURE 2: CONTACT FORM ---
+    const contactForm = document.querySelector('.form-contact');
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(event) {
+            event.preventDefault();
 
-    if (contactBtn) {
-        contactBtn.addEventListener('click', function(e) {
-            e.preventDefault(); 
+            // Use 'this' to find the specific input inside the form
+            const nameInput = this.querySelector('input[type="text"]');
+            const nameji = nameInput ? nameInput.value.trim() : "Friend";
+            
+            const btn = this.querySelector('.input-btn');
+            const responseText = document.querySelector('#response-text');
 
-            const userName = nameInput.value.trim();
+            if (btn) btn.style.display = "none";
 
-            if (userName === "") {
-                alert("Please enter your name first!");
-                return;
+            if (responseText) {
+                responseText.innerHTML = `Thank you, <span class="hidMsgSpan">${nameji}</span>! We will <span class="hidMsgSpan">contact you</span> soon.`;
+                responseText.style.display = "block";
             }
 
-            // Update content
-            responseText.innerHTML = `Thank You! <span>${userName}</span>, We will <span>contact you</span> soon!`;
-
-            // Reveal the message
-            responseText.style.display = 'block';
-
-            // Hide the input fields and button so only the message shows (Optional)
-            // If you want the form to disappear like the booking one does:
-            // nameInput.style.display = 'none';
-            // contactBtn.style.display = 'none';
-            // document.querySelector('.form-contact textarea').style.display = 'none';
-            
-            console.log("Contact message triggered for: " + userName);
+            this.reset();
         });
     }
 });
-
-// FEATURE 3: CALCULATOR (Needs to be called via oninput in HTML)
-function calculateTotal() {
-    const weightInput = document.getElementById('weight');
-    const parcelTypeInput = document.getElementById('parcelType');
-    const deliveryTypeInput = document.getElementById('deliveryType');
-    const display = document.getElementById('totalDisplay');
-
-    if (!weightInput || !parcelTypeInput || !deliveryTypeInput || !display) return;
-
-    const weight = parseFloat(weightInput.value) || 0;
-    const multiplier = parseFloat(deliveryTypeInput.value) || 1;
-    let basePrice = weight * 0.5;
-
-    if (parcelTypeInput.value === "fragile") basePrice += 50;
-    if (parcelTypeInput.value === "electronics") basePrice += 100;
-
-    display.innerText = (basePrice * multiplier).toFixed(2);
-}
