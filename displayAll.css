@@ -187,7 +187,7 @@ html, body{
 .receipt-header {
     display: flex;
     justify-content: space-between;
-    align-items: center; /* Ensures button aligns with text */
+    align-items: center;
     border-bottom: 1px dashed #333;
     padding-bottom: 15px;
     margin-bottom: 20px;

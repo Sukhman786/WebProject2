@@ -6,7 +6,7 @@ if (!$conn) {
     exit("Connection failed: " . $e['message']);
 }
 
-// 1. Capture all fields from the POST request
+
 $id        = $_POST['raw_id'];
 $s_name    = $_POST['s_name'];
 $s_mobile  = $_POST['s_mobile'];
@@ -19,7 +19,7 @@ $weight    = $_POST['weight'];
 $d_type    = $_POST['d_type'];
 $p_mode    = $_POST['p_mode'];
 
-// 2. Prepare the Massive Update Query
+
 $sql = "UPDATE courier_bookings SET 
             SENDER_NAME = :sn, 
             SENDER_MOBILE = :sm, 
@@ -35,7 +35,6 @@ $sql = "UPDATE courier_bookings SET
 
 $stmt = oci_parse($conn, $sql);
 
-// 3. Bind every single parameter
 oci_bind_by_name($stmt, ':sn', $s_name);
 oci_bind_by_name($stmt, ':sm', $s_mobile);
 oci_bind_by_name($stmt, ':sa', $s_address);
@@ -48,7 +47,6 @@ oci_bind_by_name($stmt, ':dt', $d_type);
 oci_bind_by_name($stmt, ':pm', $p_mode);
 oci_bind_by_name($stmt, ':rid', $id);
 
-// 4. Execute and Response
 if (oci_execute($stmt)) {
     echo "Update Successful! The record has been synced with the database.";
 } else {

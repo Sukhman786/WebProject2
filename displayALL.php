@@ -3,10 +3,8 @@ $conn = oci_connect('SYSTEM', '01042006', '127.0.0.1/freepdb1');
 
 $delete_msg = "";
 
-// 1. Updated Delete Logic to use RAW_ID (The Primary Key)
 if (isset($_POST['delete_id'])) {
     $del_id = $_POST['delete_id'];
-    // In our new table, RAW_ID is the unique numeric key for deletion
     $del_sql = "DELETE FROM courier_bookings WHERE RAW_ID = :bid";
     $del_stmt = oci_parse($conn, $del_sql);
     oci_bind_by_name($del_stmt, ':bid', $del_id);
@@ -23,7 +21,7 @@ $sql = "SELECT RAW_ID, TRACKING_ID, SENDER_NAME, SENDER_MOBILE, SENDER_ADDRESS,
                RECEIVER_NAME, RECEIVER_MOBILE, RECEIVER_ADDRESS, 
                PARCEL_TYPE, WEIGHT_GRAMS, DELIVERY_TYPE, PAYMENT_MODE,
                TO_CHAR(BOOKING_DATE, 'DD-MON-YYYY HH:MI AM') as BOOKING_DATE 
-        FROM courier_bookings 
+        FROM courier_bookings
         ORDER BY RAW_ID DESC";
 
 $stmt = oci_parse($conn, $sql);

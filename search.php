@@ -26,9 +26,7 @@ if (isset($_POST['delete_id'])) {
 $search_id = $_GET['booking_id'] ?? '';
 $row = null;
 
-// 3. Updated Search Logic
 if ($search_id) {
-    // Search using the Virtual Column TRACKING_ID (the S001 format)
     $sql = "SELECT RAW_ID, TRACKING_ID, SENDER_NAME, SENDER_MOBILE, SENDER_ADDRESS, 
                RECEIVER_NAME, RECEIVER_MOBILE, RECEIVER_ADDRESS, 
                PARCEL_TYPE, WEIGHT_GRAMS, DELIVERY_TYPE, PAYMENT_MODE,

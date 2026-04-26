@@ -5,7 +5,6 @@ $search_id = $_GET['booking_id'] ?? '';
 $row = null;
 
 if ($search_id) {
-    // Format date in SQL for the "Current Value" display
     $sql = "SELECT RAW_ID, TRACKING_ID, SENDER_NAME, SENDER_MOBILE, SENDER_ADDRESS, 
                    RECEIVER_NAME, RECEIVER_MOBILE, RECEIVER_ADDRESS, 
                    PARCEL_TYPE, WEIGHT_GRAMS, DELIVERY_TYPE, PAYMENT_MODE,
@@ -28,7 +27,6 @@ if ($search_id) {
     <title>Update Booking - Courier System</title>
     <link rel="stylesheet" href="search.css"> <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
-        /* Specific styles for the side-by-side update grid */
         .details-section{
             display:flex;
             flex-direction: column;

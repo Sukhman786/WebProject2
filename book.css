@@ -196,7 +196,6 @@ textarea.input-form{
     margin-top: 1rem;
 }
 
-/* Ensure the highlight stays neon green */
 .highlight {
     color: var(--main-color);
     text-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
@@ -210,34 +209,25 @@ input:-webkit-autofill:focus {
     transition: background-color 5000s ease-in-out 0s;
 }
 
-/* Add these to your existing CSS */
-
-/* .contactji {
-    padding: 30px 0; /* Gives space at top and bottom */
-    /* min-height: 100vh; */
-/* } */
 
 .form-section-title {
     color: var(--text-color);
     font-size: 1.5rem;
     margin-top: 15px;
     align-self: flex-start;
-    margin-left: 15%; /* Aligns with the input width */
+    margin-left: 15%;
 }
 
-/* Style for the dropdown selects to match your inputs */
 select.input-form {
     cursor: pointer;
-    appearance: none; /* Removes default browser arrow */
+    appearance: none;
 }
 
-/* Make the container scrollable if content is long */
 .contactji .contact-container {
     max-height: 90vh;
     overflow-y: auto;
 }
 
-/* Scrollbar styling for a cleaner look */
 .contact-container::-webkit-scrollbar {
     width: 10px;
 }

@@ -1,11 +1,10 @@
-// FEATURE 3: CALCULATOR (Moved outside so HTML can access it globally)
+// CALCULATE CHARGES
 function calculateTotal() {
     const weightInput = document.getElementById('weight');
     const parcelTypeInput = document.getElementById('parcelType');
     const deliveryTypeInput = document.getElementById('deliveryType');
     const display = document.getElementById('totalDisplay');
 
-    // Basic safety check
     if (!weightInput || !parcelTypeInput || !deliveryTypeInput || !display) return;
 
     const weight = parseFloat(weightInput.value) || 0;
@@ -19,11 +18,9 @@ function calculateTotal() {
 }
 
 
-
-
+// BOOKING FORM
 document.addEventListener('DOMContentLoaded', () => {
     
-    // --- FEATURE 1: BOOKING FORM ---
     const submitBtn = document.getElementById('submitBtn');
     const bookingForm = document.getElementById('bookingForm');
     
@@ -36,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const formData = new FormData(bookingForm);
 
+            //=============================================
             fetch('booking.php', {
                 method: 'POST',
                 body: formData
@@ -53,20 +51,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             })
             .catch(error => console.error('Booking Error:', error));
+            //=================================================
         });
     }
 
-    // --- FEATURE 2: CONTACT FORM ---
+    //CONTACT FORM
     const contactForm = document.querySelector('.form-contact');
     if (contactForm) {
         contactForm.addEventListener('submit', function(event) {
             event.preventDefault();
 
-            // Use 'this' to find the specific input inside the form
             const nameInput = this.querySelector('input[type="text"]');
             const nameji = nameInput ? nameInput.value.trim() : "Friend";
             
-            const btn = this.querySelector('.input-btn');
+            const btn = this.querySelector('.input-btn'); 
             const responseText = document.querySelector('#response-text');
 
             if (btn) btn.style.display = "none";
