@@ -1,5 +1,4 @@
 <?php
-// 1. Connection Details
 $conn = oci_connect('SYSTEM', '01042006', '127.0.0.1/freepdb1');
 
 if (!$conn) {
@@ -7,32 +6,37 @@ if (!$conn) {
     die("Connection failed: " . $e['message']);
 }
 
-// 2. Updated Delete Request Logic
+// Delete Logic------------------------------------------------------
 if (isset($_POST['delete_id'])) {
     $del_id = $_POST['delete_id'];
-    // Use RAW_ID for the actual deletion query
-    $del_sql = "DELETE FROM courier_bookings WHERE RAW_ID = :bid";
+
+    $del_sql = "DELETE FROM parcelji WHERE RAW_ID = :bid";
     $del_stmt = oci_parse($conn, $del_sql);
     oci_bind_by_name($del_stmt, ':bid', $del_id);
     
     if (oci_execute($del_stmt)) {
+        oci_commit($conn);
         echo "<script>alert('Booking has been permanently deleted from the Database.'); window.location.href='search.php';</script>";
     } else {
         $e = oci_error($del_stmt);
         echo "<script>alert('Error deleting record: " . $e['message'] . "');</script>";
     }
 }
+//---------------------------------------------------------------------
 
 $search_id = $_GET['booking_id'] ?? '';
 $row = null;
 
 if ($search_id) {
-    $sql = "SELECT RAW_ID, TRACKING_ID, SENDER_NAME, SENDER_MOBILE, SENDER_ADDRESS, 
-               RECEIVER_NAME, RECEIVER_MOBILE, RECEIVER_ADDRESS, 
-               PARCEL_TYPE, WEIGHT_GRAMS, DELIVERY_TYPE, PAYMENT_MODE,
-               TO_CHAR(BOOKING_DATE, 'DD-MON-YYYY HH:MI AM') as BOOKING_DATE 
-        FROM courier_bookings 
-        WHERE TRACKING_ID = :bid";
+    $sql = "SELECT p.RAW_ID, p.TRACKING_ID, 
+                   s.SENDER_NAME, s.SENDER_MOBILE, s.SENDER_ADDRESS, 
+                   r.RECEIVER_NAME, r.RECEIVER_MOBILE, r.RECEIVER_ADDRESS, 
+                   p.PARCEL_TYPE, p.WEIGHT_GRAMS, p.DELIVERY_TYPE, p.PAYMENT_MODE,
+                   TO_CHAR(p.BOOKING_DATE, 'DD-MON-YYYY HH:MI AM') as BOOKING_DATE 
+            FROM parcelji p
+            JOIN senderji s ON p.sender_id = s.sender_id
+            JOIN receiverji r ON p.receiver_id = r.receiver_id
+            WHERE p.TRACKING_ID = :bid";
         
     $stmt = oci_parse($conn, $sql);
     oci_bind_by_name($stmt, ':bid', $search_id);
