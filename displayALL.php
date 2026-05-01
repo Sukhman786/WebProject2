@@ -65,6 +65,9 @@ oci_execute($stmt);
                 $count = 0;
                 while ($row = oci_fetch_array($stmt, OCI_ASSOC)): 
                     $count++;
+
+                    $s_addr = htmlspecialchars($row['SENDER_ADDRESS'], ENT_QUOTES);
+                    $r_addr = htmlspecialchars($row['RECEIVER_ADDRESS'], ENT_QUOTES);
                 ?>
                 <div class="receipt-card">
                     <div class="receipt-header">
@@ -84,14 +87,14 @@ oci_execute($stmt);
                             <h3><i class='bx bxs-user-pin'></i> Sender Details</h3>
                             <p><strong>Name:</strong> <?php echo $row['SENDER_NAME']; ?></p>
                             <p><strong>Phone:</strong> <?php echo $row['SENDER_MOBILE']; ?></p>
-                            <p><strong>Address:</strong> <?php echo $row['SENDER_ADDRESS']; ?></p>
+                            <p id="sender_add"><strong>Address:</strong> <?php echo $row['SENDER_ADDRESS']; ?></p>
                         </div>
 
                         <div class="info-group">
                             <h3><i class='bx bxs-map-pin'></i> Receiver Details</h3>
                             <p><strong>Name:</strong> <?php echo $row['RECEIVER_NAME']; ?></p>
                             <p><strong>Phone:</strong> <?php echo $row['RECEIVER_MOBILE']; ?></p>
-                            <p><strong>Address:</strong> <?php echo $row['RECEIVER_ADDRESS']; ?></p>
+                            <p id="receiver_add"><strong>Address:</strong> <?php echo $row['RECEIVER_ADDRESS']; ?></p>
                         </div>
                     </div>
 
@@ -105,18 +108,39 @@ oci_execute($stmt);
                             <span><strong>Delivery:</strong> <?php echo $row['DELIVERY_TYPE']; ?></span>
                         </div>
                     </div>
+
+                    <div class="action-btns" style="margin-top: 40px;">
+                    <button onclick="trackji('<?php echo $s_addr; ?>', '<?php echo $r_addr; ?>')" class="track-btn">TRACK</button>
+                    <a href="index.html"><button class="input-btnji secondary-btn">Back to Home</button></a>
                 </div>
+                </div>
+
+                
                 <?php endwhile; ?>
 
                 <?php if ($count == 0): ?>
                     <h2 style="text-align:center; color:white; margin-top: 20px;">No records found.</h2>
                 <?php endif; ?>
             </div>
-
-            <div class="action-btns" style="margin-top: 40px;">
-                <a href="index.html"><button class="input-btn secondary-btn">Back to Home</button></a>
-            </div>
         </div>
     </section>
+
+    <script>
+        function trackji(sender_add, receiver_add){
+
+            if (!sender_add || !receiver_add || !sender_add.trim() || !receiver_add.trim()) {
+                alert("Address information is missing.");
+                return;
+            }
+
+            const origin = encodeURIComponent(sender_add.trim());
+            const destination = encodeURIComponent(receiver_add.trim());
+            const base_url = "https://www.google.com/maps/dir/?api=1";
+            
+            const result_url = `${base_url}&origin=${origin}&destination=${destination}`;
+
+            window.open(result_url,`_blank`)
+        }
+    </script>
 </body>
 </html>
