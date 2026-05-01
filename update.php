@@ -5,12 +5,15 @@ $search_id = $_GET['booking_id'] ?? '';
 $row = null;
 
 if ($search_id) {
-    $sql = "SELECT RAW_ID, TRACKING_ID, SENDER_NAME, SENDER_MOBILE, SENDER_ADDRESS, 
-                   RECEIVER_NAME, RECEIVER_MOBILE, RECEIVER_ADDRESS, 
-                   PARCEL_TYPE, WEIGHT_GRAMS, DELIVERY_TYPE, PAYMENT_MODE,
-                   TO_CHAR(BOOKING_DATE, 'DD-MON-YYYY HH:MI AM') as BOOKING_DATE 
-            FROM courier_bookings 
-            WHERE TRACKING_ID = :bid";
+    $sql = "SELECT p.RAW_ID, p.TRACKING_ID, 
+                   s.SENDER_NAME, s.SENDER_MOBILE, s.SENDER_ADDRESS, 
+                   r.RECEIVER_NAME, r.RECEIVER_MOBILE, r.RECEIVER_ADDRESS, 
+                   p.PARCEL_TYPE, p.WEIGHT_GRAMS, p.DELIVERY_TYPE, p.PAYMENT_MODE,
+                   TO_CHAR(p.BOOKING_DATE, 'DD-MON-YYYY HH:MI AM') as BOOKING_DATE 
+            FROM parcelji p
+            JOIN senderji s ON p.sender_id = s.sender_id
+            JOIN receiverji r ON p.receiver_id = r.receiver_id
+            WHERE p.TRACKING_ID = :bid";
             
     $stmt = oci_parse($conn, $sql);
     oci_bind_by_name($stmt, ':bid', $search_id);
