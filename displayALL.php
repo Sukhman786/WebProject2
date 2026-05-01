@@ -5,24 +5,30 @@ $delete_msg = "";
 
 if (isset($_POST['delete_id'])) {
     $del_id = $_POST['delete_id'];
-    $del_sql = "DELETE FROM courier_bookings WHERE RAW_ID = :bid";
+
+    $del_sql = "DELETE FROM parcelji WHERE RAW_ID = :bid";
     $del_stmt = oci_parse($conn, $del_sql);
     oci_bind_by_name($del_stmt, ':bid', $del_id);
     
     if (oci_execute($del_stmt)) {
+        oci_commit($conn);
         $delete_msg = "Record deleted successfully.";
-    } else {
+    }
+    
+    else {
         $e = oci_error($del_stmt);
         $delete_msg = "Error: " . $e['message'];
     }
 }
 
-$sql = "SELECT RAW_ID, TRACKING_ID, SENDER_NAME, SENDER_MOBILE, SENDER_ADDRESS, 
-               RECEIVER_NAME, RECEIVER_MOBILE, RECEIVER_ADDRESS, 
-               PARCEL_TYPE, WEIGHT_GRAMS, DELIVERY_TYPE, PAYMENT_MODE,
-               TO_CHAR(BOOKING_DATE, 'DD-MON-YYYY HH:MI AM') as BOOKING_DATE 
-        FROM courier_bookings
-        ORDER BY RAW_ID DESC";
+$sql = "SELECT p.RAW_ID, p.TRACKING_ID, s.SENDER_NAME, s.SENDER_MOBILE, s.SENDER_ADDRESS, 
+               r.RECEIVER_NAME, r.RECEIVER_MOBILE, r.RECEIVER_ADDRESS, 
+               p.PARCEL_TYPE, p.WEIGHT_GRAMS, p.DELIVERY_TYPE, p.PAYMENT_MODE,
+               TO_CHAR(p.BOOKING_DATE, 'DD-MON-YYYY HH:MI AM') as BOOKING_DATE 
+        FROM parcelji p
+        JOIN senderji s ON p.sender_id = s.sender_id
+        JOIN receiverji r ON p.receiver_id = r.receiver_id
+        ORDER BY p.RAW_ID DESC";
 
 $stmt = oci_parse($conn, $sql);
 oci_execute($stmt);
