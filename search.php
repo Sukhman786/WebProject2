@@ -91,14 +91,14 @@ if ($search_id) {
                         <h3><i class='bx bxs-user-pin'></i> Sender Details</h3>
                         <p><strong>Name:</strong> <?php echo $row['SENDER_NAME']; ?></p>
                         <p><strong>Phone:</strong> <?php echo $row['SENDER_MOBILE']; ?></p>
-                        <p><strong>Address:</strong> <?php echo $row['SENDER_ADDRESS']; ?></p>
+                        <p id="sender_add"><strong>Address:</strong> <?php echo $row['SENDER_ADDRESS']; ?></p>
                     </div>
 
                     <div class="info-group">
                         <h3><i class='bx bxs-map-pin'></i> Receiver Details</h3>
                         <p><strong>Name:</strong> <?php echo $row['RECEIVER_NAME']; ?></p>
                         <p><strong>Phone:</strong> <?php echo $row['RECEIVER_MOBILE']; ?></p>
-                        <p><strong>Address:</strong> <?php echo $row['RECEIVER_ADDRESS']; ?></p>
+                        <p id="receiver_add"><strong>Address:</strong> <?php echo $row['RECEIVER_ADDRESS']; ?></p>
                     </div>
                 </div>
 
@@ -119,9 +119,30 @@ if ($search_id) {
             <?php endif; ?>
 
             <div class="action-btns">
-                <a href="index.html"><button class="input-btn secondary-btn">Back to Home</button></a>
+                <button onclick="trackji()" class="track-btn" style="margin-left: 10px;">TRACK</button>
+                <a href="index.html"><button class="input-btnji secondary-btn">Back to Home</button></a>
             </div>
         </div>
     </section>
+
+    <script>
+        function trackji(){
+            const sender_add = document.getElementById('sender_add');
+            const receiver_add = document.getElementById('receiver_add');
+
+            if (!sender_add || !receiver_add || !sender_add.innerText.trim() || !receiver_add.innerText.trim()) {
+                alert("Address information is missing.");
+                return;
+            }
+
+            const origin = encodeURIComponent(sender_add.innerText.trim());
+            const destination = encodeURIComponent(receiver_add.innerText.trim());
+            const base_url = "https://www.google.com/maps/dir/?api=1";
+            
+            const result_url = `${base_url}&origin=${origin}&destination=${destination}`;
+
+            window.open(result_url,`_blank`)
+        }
+    </script>
 </body>
 </html>
