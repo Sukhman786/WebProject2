@@ -17,7 +17,9 @@ if (isset($_POST['delete_id'])) {
     if (oci_execute($del_stmt)) {
         oci_commit($conn);
         echo "<script>alert('Booking has been permanently deleted from the Database.'); window.location.href='search.php';</script>";
-    } else {
+    }
+    
+    else {
         $e = oci_error($del_stmt);
         echo "<script>alert('Error deleting record: " . $e['message'] . "');</script>";
     }
