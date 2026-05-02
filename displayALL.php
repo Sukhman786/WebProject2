@@ -28,7 +28,7 @@ $sql = "SELECT p.RAW_ID, p.TRACKING_ID, s.SENDER_NAME, s.SENDER_MOBILE, s.SENDER
         FROM parcelji p
         JOIN senderji s ON p.sender_id = s.sender_id
         JOIN receiverji r ON p.receiver_id = r.receiver_id
-        ORDER BY p.RAW_ID DESC";
+        ORDER BY p.RAW_ID";
 
 $stmt = oci_parse($conn, $sql);
 oci_execute($stmt);
