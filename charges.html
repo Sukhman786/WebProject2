@@ -41,23 +41,5 @@
                 <b>Result: </b><span id="totalDisplay" style="color: white;"> Rs. 0.00</span>
         </p>
     </div>
-
-    <script>
-        function calculateTotal() {
-            const weight = parseFloat(document.getElementById('weight').value) || 0;
-            const parcelType = document.getElementById('parcelType').value;
-            const multiplier = parseFloat(document.getElementById('deliveryType').value);
-            
-            let basePrice = weight * 0.5;
-
-            if (parcelType === "fragile") basePrice += 50;
-            if (parcelType === "electronics") basePrice += 100;
-
-            const finalTotal = basePrice * multiplier;
-
-            document.getElementById('totalDisplay').innerText = "Rs. " + finalTotal.toFixed(2);
-        }
-    </script>
-
 </body>
 </html>
