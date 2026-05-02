@@ -57,7 +57,9 @@ if ($ids) {
     if (oci_execute($stmt3, OCI_NO_AUTO_COMMIT)) {
         oci_commit($conn);
         echo "Update Successful! The record has been synced with the database.";
-    } else {
+    }
+    
+    else {
         oci_rollback($conn);
         $e = oci_error($stmt3);
         echo "Database Error: " . $e['message'];
