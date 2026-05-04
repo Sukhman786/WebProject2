@@ -1,23 +1,3 @@
-// CALCULATE CHARGES
-function calculateTotal() {
-    const weightInput = document.getElementById('weight');
-    const parcelTypeInput = document.getElementById('parcelType');
-    const deliveryTypeInput = document.getElementById('deliveryType');
-    const display = document.getElementById('totalDisplay');
-
-    if (!weightInput || !parcelTypeInput || !deliveryTypeInput || !display) return;
-
-    const weight = parseFloat(weightInput.value) || 0;
-    const multiplier = parseFloat(deliveryTypeInput.value) || 1;
-    let basePrice = weight * 0.5;
-
-    if (parcelTypeInput.value === "fragile") basePrice += 50;
-    if (parcelTypeInput.value === "electronics") basePrice += 100;
-
-    display.innerText = (basePrice * multiplier).toFixed(2);
-}
-
-
 // BOOKING FORM
 document.addEventListener('DOMContentLoaded', () => {
     
